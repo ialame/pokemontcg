@@ -1,15 +1,15 @@
 package com.pca.pokimages.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "serie")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Serie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +18,7 @@ public class Serie {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "serie")
-    private List<Set> sets;
+    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Set> sets = new ArrayList<>();
 }

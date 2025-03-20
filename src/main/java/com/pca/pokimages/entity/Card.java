@@ -1,24 +1,27 @@
 package com.pca.pokimages.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "card")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Card {
     @Id
-    private String id; // ex. "base1-1"
+    private String id;
 
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
+    private String imagePath;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "set_id")
+    @JsonBackReference
     private Set set;
 
-    @Column(name = "image_path")
-    private String imagePath; // ex. "images/Base/Base Set/Bulbasaur.png"
+    public String getImagePath() {
+        return imagePath != null ? "http://localhost:8081/api/images/" + set.getSerie().getName() + "/" + set.getName() + "/" + name + ".png" : null;
+    }
 }

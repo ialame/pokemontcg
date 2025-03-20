@@ -1,29 +1,31 @@
 package com.pca.pokimages.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "set")
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Set {
     @Id
-    private String id; // ex. "base1"
+    private String id;
 
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "serie_id")
-    private Serie serie;
-
-    @Column(name = "release_date")
     private String releaseDate;
 
-    @OneToMany(mappedBy = "set")
-    private List<Card> cards;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "serie_id")
+    @JsonBackReference
+    private Serie serie;
+
+    @OneToMany(mappedBy = "set", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Card> cards = new ArrayList<>();
 }

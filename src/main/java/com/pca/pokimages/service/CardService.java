@@ -125,10 +125,10 @@ public class CardService {
         return serieRepository.findAll();
     }
 
+
     public List<Set> getSetsBySeries(String seriesName) {
         return setRepository.findBySerieName(seriesName);
     }
-
     public List<Card> getCardsBySet(String setId) {
         return cardRepository.findBySetId(setId);
     }
