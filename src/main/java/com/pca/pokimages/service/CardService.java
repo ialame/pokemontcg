@@ -1,139 +1,84 @@
 package com.pca.pokimages.service;
 
-import com.pca.pokimages.dto.CardResponse;
-import com.pca.pokimages.dto.PokemonTcgCardsResponse;
-import com.pca.pokimages.dto.PokemonTcgSetsResponse;
-import com.pca.pokimages.dto.SetResponse;
+import com.github.f4b6a3.ulid.Ulid;
 import com.pca.pokimages.entity.Card;
+import com.pca.pokimages.entity.CardSet;
 import com.pca.pokimages.entity.Serie;
-import com.pca.pokimages.entity.Set;
 import com.pca.pokimages.repository.CardRepository;
+import com.pca.pokimages.repository.CardSetRepository;
 import com.pca.pokimages.repository.SerieRepository;
-import com.pca.pokimages.repository.SetRepository;
 import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CardService {
+    private static final Logger log = LoggerFactory.getLogger(CardService.class);
 
-    private static final Logger logger = LoggerFactory.getLogger(CardService.class);
-    private final RestTemplate restTemplate = new RestTemplate();
-    private static final String POKEMON_TCG_API = "https://api.pokemontcg.io/v2";
-    private static final String IMAGE_DIR = "/app/images/";
+    @Autowired
+    private SerieRepository serieRepository;
 
-    private final SerieRepository serieRepository;
-    private final SetRepository setRepository;
-    private final CardRepository cardRepository;
+    @Autowired
+    private CardSetRepository cardSetRepository;
+
+    @Autowired
+    private CardRepository cardRepository;
 
     @PostConstruct
     public void initData() {
-        try {
-            if (serieRepository.count() > 0) {
-                logger.info("La base contient déjà des séries, pas d'initialisation nécessaire.");
-                return;
-            }
+        log.info("Début de l'initialisation des données.");
 
-            logger.info("Début de l'initialisation des données depuis l'API Pokémon TCG.");
-            PokemonTcgSetsResponse setsResponse = restTemplate.getForObject(POKEMON_TCG_API + "/sets", PokemonTcgSetsResponse.class);
-            if (setsResponse == null || setsResponse.getData() == null) {
-                logger.warn("Réponse de l'API /sets vide ou nulle.");
-                return;
-            }
+        // Ajout d'une série
+        Serie testSerie = new Serie("Test Series");
+        serieRepository.save(testSerie);
+        log.info("Série insérée - name: 'Test Series', id: '{}'", testSerie.getId());
 
-            for (SetResponse setResponse : setsResponse.getData()) {
-                Serie serie = serieRepository.findByName(setResponse.getSeries());
-                if (serie == null) {
-                    serie = new Serie();
-                    serie.setName(setResponse.getSeries());
-                    serie = serieRepository.save(serie);
-                    logger.info("Série sauvegardée : {}", serie.getName());
-                }
+        // Ajout d'un set
+        CardSet testSet = new CardSet();
+        testSet.setName("Test Set");
+        testSet.setReleaseDate("2023-01-01");
+        testSet.setSerie(testSerie);
+        cardSetRepository.save(testSet);
+        log.info("Set inséré - name: 'Test Set', id: '{}'", testSet.getId());
 
-                Set set = setRepository.findById(setResponse.getId()).orElse(new Set());
-                set.setId(setResponse.getId());
-                set.setName(setResponse.getName());
-                set.setSerie(serie);
-                set.setReleaseDate(setResponse.getReleaseDate());
-                setRepository.save(set);
-                logger.info("Set sauvegardé : {}", set.getName());
-
-                try {
-                    PokemonTcgCardsResponse cardsResponse = restTemplate.getForObject(
-                            POKEMON_TCG_API + "/cards?q=set.id:" + setResponse.getId(), PokemonTcgCardsResponse.class);
-                    if (cardsResponse == null || cardsResponse.getData() == null) {
-                        logger.warn("Réponse de l'API /cards vide pour le set : {}", setResponse.getId());
-                        continue;
-                    }
-
-                    for (CardResponse cardResponse : cardsResponse.getData()) {
-                        Card card = cardRepository.findById(cardResponse.getId()).orElse(new Card());
-                        card.setId(cardResponse.getId());
-                        card.setName(cardResponse.getName());
-                        card.setSet(set);
-
-                        String imageUrl = cardResponse.getImages().getLarge();
-                        String imagePath = IMAGE_DIR + serie.getName() + "/" + set.getName() + "/" + cardResponse.getName() + ".png";
-                        try {
-                            downloadImage(imageUrl, imagePath);
-                            card.setImagePath(imagePath);
-                        } catch (IOException e) {
-                            logger.warn("Échec du téléchargement de l'image pour la carte {} : {}", cardResponse.getName(), e.getMessage());
-                            card.setImagePath(null);  // Sauvegarde sans image
-                        }
-
-                        cardRepository.save(card);
-                        logger.info("Carte sauvegardée : {}", card.getName());
-                    }
-                } catch (RestClientException e) {
-                    logger.warn("Échec de la récupération des cartes pour le set {} : {}", setResponse.getId(), e.getMessage());
-                    continue;
-                }
-            }
-            logger.info("Initialisation des données terminée avec succès.");
-        } catch (Exception e) {
-            logger.error("Erreur critique lors de l'initialisation des données : ", e);
-            throw new RuntimeException("Échec de l'initialisation des données", e);
-        }
-    }
-
-    private void downloadImage(String imageUrl, String destination) throws IOException {
-        File file = new File(destination);
-        file.getParentFile().mkdirs();
-        URL url = new URL(imageUrl);
-        try (ReadableByteChannel rbc = Channels.newChannel(url.openStream());
-             FileOutputStream fos = new FileOutputStream(file)) {
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-        }
+        // Ajout d'une carte
+        Card testCard = new Card();
+        testCard.setName("Test Card");
+        testCard.setImagePath("/images/test.png");
+        testCard.setCardSet(testSet);
+        cardRepository.save(testCard);
+        log.info("Carte insérée - name: 'Test Card', id: '{}'", testCard.getId());
     }
 
     public List<Serie> getSeries() {
         return serieRepository.findAll();
     }
 
-
-    public List<Set> getSetsBySeries(String seriesName) {
-        return setRepository.findBySerieName(seriesName);
-    }
-    public List<Card> getCardsBySet(String setId) {
-        return cardRepository.findBySetId(setId);
+    public List<CardSet> getSetsBySeries(String seriesName) {
+        Serie serie = serieRepository.findByName(seriesName)
+                .orElseThrow(() -> new RuntimeException("Serie not found: " + seriesName));
+        return cardSetRepository.findBySerie(serie);
     }
 
-    public Card getCardById(String id) {
-        return cardRepository.findById(id).orElseThrow(() -> new RuntimeException("Carte non trouvée"));
+    public List<Card> getCardsBySet(Ulid setId) {
+        CardSet set = cardSetRepository.findById(setId)
+                .orElseThrow(() -> new RuntimeException("Set not found: " + setId));
+        return cardRepository.findByCardSet(set);
+    }
+
+    public Card getCardById(Ulid cardId) {
+        return cardRepository.findById(cardId)
+                .orElseThrow(() -> new RuntimeException("Card not found: " + cardId));
+    }
+
+    public List<Card> getAllCards() {
+        log.info("Appel de getAllCards");
+        List<Card> cards = cardRepository.findAll();
+        log.info("Nombre de cartes trouvées : {}", cards.size());
+        return cards;
     }
 }

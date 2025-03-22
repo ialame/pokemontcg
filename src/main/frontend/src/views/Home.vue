@@ -109,14 +109,14 @@ watch(selectedSet, (newSet) => {
     </div>
 
     <div v-else-if="sets.length > 0" class="select-container">
-      <label for="sets">Choisir un set :</label>
+      <label for="sets">Choisir un cardSet :</label>
       <select id="sets" v-model="selectedSet">
-        <option value="">-- Sélectionner un set --</option>
-        <option v-for="set in sets" :key="set.id" :value="set.id">{{ set.name }}</option>
+        <option value="">-- Sélectionner un cardSet --</option>
+        <option v-for="cardSet in sets" :key="cardSet.id" :value="cardSet.id">{{ cardSet.name }}</option>
       </select>
     </div>
     <div v-else-if="selectedSeries" class="no-data">
-      Aucun set disponible pour cette série.
+      Aucun cardSet disponible pour cette série.
     </div>
 
     <div v-if="cards.length > 0" class="cards-section">
@@ -129,7 +129,7 @@ watch(selectedSet, (newSet) => {
       </div>
     </div>
     <div v-else-if="selectedSet" class="no-data">
-      Aucune carte disponible pour ce set.
+      Aucune carte disponible pour ce cardSet.
     </div>
   </div>
 </template>

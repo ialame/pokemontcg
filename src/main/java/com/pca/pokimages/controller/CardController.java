@@ -1,63 +1,41 @@
 package com.pca.pokimages.controller;
 
-import com.pca.pokimages.dto.SerieDTO;
+import com.github.f4b6a3.ulid.Ulid;
 import com.pca.pokimages.entity.Card;
-import com.pca.pokimages.entity.Set;
+import com.pca.pokimages.entity.CardSet;
+import com.pca.pokimages.entity.Serie;
 import com.pca.pokimages.service.CardService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api")
-@RequiredArgsConstructor
+@RequestMapping("/api/cards")
 public class CardController {
+    private static final Logger log = LoggerFactory.getLogger(CardController.class);
+    @Autowired
+    private CardService cardService;
 
-    private final CardService cardService;
-
-    @GetMapping("/series")
-    public List<SerieDTO> getSeries() {
-        return cardService.getSeries().stream()
-                .map(serie -> new SerieDTO(serie.getId(), serie.getName()))
-                .collect(Collectors.toList());
+    @GetMapping
+    public List<Card> getAllCards() {
+        log.info("Requête GET /api/cards reçue");
+        List<Card> cards = cardService.getAllCards();
+        log.info("Réponse envoyée avec {} cartes", cards.size());
+        return cards;
     }
 
-    @GetMapping("/series/{seriesName}/sets")
-    public List<Set> getSetsBySeries(@PathVariable String seriesName) {
-        return cardService.getSetsBySeries(seriesName);
-    }
-
-    @GetMapping("/sets/{setId}/cards")
+    @GetMapping("/set/{setId}")
     public List<Card> getCardsBySet(@PathVariable String setId) {
-        return cardService.getCardsBySet(setId);
+        Ulid ulid = Ulid.from(setId);
+        return cardService.getCardsBySet(ulid);
     }
 
-    @GetMapping("/cards/{id}")
+    @GetMapping("/{id}")
     public Card getCardById(@PathVariable String id) {
-        return cardService.getCardById(id);
+        Ulid ulid = Ulid.from(id);
+        return cardService.getCardById(ulid);
     }
-    @GetMapping("/images/{series}/{set}/{filename}")
-    public ResponseEntity<FileSystemResource> getImage(
-            @PathVariable String series,
-            @PathVariable String set,
-            @PathVariable String filename) {
-        File file = new File("/app/images/" + series + "/" + set + "/" + filename);
-        if (file.exists()) {
-            return ResponseEntity.ok()
-                    .contentType(MediaType.IMAGE_PNG)
-                    .body(new FileSystemResource(file));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
 }

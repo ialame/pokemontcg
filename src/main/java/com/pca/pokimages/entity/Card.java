@@ -1,27 +1,30 @@
 package com.pca.pokimages.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.pca.pokimages.hibernate.AbstractUlidEntity;
+import com.pca.pokimages.hibernate.UlidType;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 
 @Entity
 @Table(name = "card")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
-public class Card {
-    @Id
-    private String id;
-
+@EqualsAndHashCode(callSuper = true)
+public class Card extends AbstractUlidEntity {
     @Column(nullable = false)
     private String name;
 
     private String imagePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "set_id")
-    @JsonBackReference
-    private Set set;
+    @JoinColumn(name = "cardset_id", columnDefinition = "BINARY(16)", foreignKey = @ForeignKey(name = "fk_card_cardset"))
+    @Type(UlidType.class)
+    private CardSet cardSet;
 
     public String getImagePath() {
-        return imagePath != null ? "http://localhost:8081/api/images/" + set.getSerie().getName() + "/" + set.getName() + "/" + name + ".png" : null;
+        return imagePath != null ? "http://localhost:8081/api/images/" + cardSet.getSerie().getName() + "/" + cardSet.getName() + "/" + name + ".png" : null;
     }
 }

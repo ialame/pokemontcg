@@ -1,8 +1,11 @@
 package com.pca.pokimages.repository;
 
+import com.github.f4b6a3.ulid.Ulid;
 import com.pca.pokimages.entity.Serie;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SerieRepository extends JpaRepository<Serie, Long> {
-    Serie findByName(String name);
+import java.util.Optional;
+
+public interface SerieRepository extends JpaRepository<Serie, Ulid> {
+    Optional<Serie> findByName(String name);
 }

@@ -29,8 +29,8 @@
 #   MVNW_VERBOSE - true: enable verbose log; debug: trace the mvnw script; others: silence the output
 # ----------------------------------------------------------------------------
 
-set -euf
-[ "${MVNW_VERBOSE-}" != debug ] || set -x
+cardSet -euf
+[ "${MVNW_VERBOSE-}" != debug ] || cardSet -x
 
 # OS specific support.
 native_path() { printf %s\\n "$1"; }
@@ -41,7 +41,7 @@ CYGWIN* | MINGW*)
   ;;
 esac
 
-# set JAVACMD and JAVACCMD
+# cardSet JAVACMD and JAVACCMD
 set_java_home() {
   # For Cygwin and MinGW, ensure paths are in Unix format before anything is touched
   if [ -n "${JAVA_HOME-}" ]; then
@@ -55,24 +55,24 @@ set_java_home() {
 
       if [ ! -x "$JAVACMD" ] || [ ! -x "$JAVACCMD" ]; then
         echo "The JAVA_HOME environment variable is not defined correctly, so mvnw cannot run." >&2
-        echo "JAVA_HOME is set to \"$JAVA_HOME\", but \"\$JAVA_HOME/bin/java\" or \"\$JAVA_HOME/bin/javac\" does not exist." >&2
+        echo "JAVA_HOME is cardSet to \"$JAVA_HOME\", but \"\$JAVA_HOME/bin/java\" or \"\$JAVA_HOME/bin/javac\" does not exist." >&2
         return 1
       fi
     fi
   else
     JAVACMD="$(
-      'set' +e
+      'cardSet' +e
       'unset' -f command 2>/dev/null
       'command' -v java
     )" || :
     JAVACCMD="$(
-      'set' +e
+      'cardSet' +e
       'unset' -f command 2>/dev/null
       'command' -v javac
     )" || :
 
     if [ ! -x "${JAVACMD-}" ] || [ ! -x "${JAVACCMD-}" ]; then
-      echo "The java/javac command does not exist in PATH nor is JAVA_HOME set, so mvnw cannot run." >&2
+      echo "The java/javac command does not exist in PATH nor is JAVA_HOME cardSet, so mvnw cannot run." >&2
       return 1
     fi
   fi

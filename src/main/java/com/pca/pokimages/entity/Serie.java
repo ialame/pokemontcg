@@ -1,24 +1,28 @@
 package com.pca.pokimages.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.pca.pokimages.hibernate.AbstractUlidEntity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "serie")
-@Data
-public class Serie {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
+public class Serie extends AbstractUlidEntity {
+    @Setter
+    @Getter
+    @Column(name = "name")
     private String name;
 
-    @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<Set> sets = new ArrayList<>();
+    @OneToMany(mappedBy = "serie", fetch = FetchType.LAZY)
+    private List<CardSet> sets;
+
+    public Serie(String name) {
+        this.name = name;
+    }
+    public Serie() {
+    }
+
 }
