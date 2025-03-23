@@ -1,0 +1,518 @@
+ia@debian12:~/houfa/pokemontcg$ docker compose down --volumes
+[+] Running 5/5
+ ✔ Container pokemontcg-backend-1   Removed                                                                                                                                          0.0s 
+ ✔ Container pokemontcg-frontend-1  Removed                                                                                                                                          0.0s 
+ ✔ Container pokemontcg-db-1        Removed                                                                                                                                          0.0s 
+ ✔ Volume pokemontcg_mariadb-data   Removed                                                                                                                                          0.0s 
+ ✔ Network pokemontcg_default       Removed                                                                                                                                          0.1s 
+ia@debian12:~/houfa/pokemontcg$ docker compose up --build
+[+] Running 0/0
+ ⠋ Service frontend  Building                                                                                                                                                        0.1s 
+[+] Running 0/2end   Building                                                                                                                                                        0.1s 
+[+] Building 52.3s (34/34) FINISHED                                                                                                                                  docker:desktop-linux 
+ => [backend internal] load build definition from Dockerfile                                                                                                                         0.0s 
+ => => transferring dockerfile: 311B                                                                                                                                                 0.0s
+ => [frontend internal] load build definition from Dockerfile                                                                                                                        0.0s
+ => => transferring dockerfile: 299B                                                                                                                                                 0.0s
+ => [backend internal] load metadata for docker.io/library/openjdk:17-jdk-slim                                                                                                       3.2s
+ => [backend internal] load metadata for docker.io/library/maven:3.8.5-openjdk-17                                                                                                    3.2s
+ => [frontend internal] load metadata for docker.io/library/nginx:alpine                                                                                                             3.3s 
+ => [frontend internal] load metadata for docker.io/library/node:16                                                                                                                  3.2s 
+ => [backend auth] library/maven:pull token for registry-1.docker.io                                                                                                                 0.0s 
+ => [backend auth] library/openjdk:pull token for registry-1.docker.io                                                                                                               0.0s
+ => [frontend auth] library/nginx:pull token for registry-1.docker.io                                                                                                                0.0s 
+ => [frontend auth] library/node:pull token for registry-1.docker.io                                                                                                                 0.0s 
+ => [backend internal] load .dockerignore                                                                                                                                            0.0s 
+ => => transferring context: 2B                                                                                                                                                      0.0s
+ => [frontend internal] load .dockerignore                                                                                                                                           0.0s
+ => => transferring context: 2B                                                                                                                                                      0.0s
+ => [backend build 1/4] FROM docker.io/library/maven:3.8.5-openjdk-17@sha256:3a9c30b3af6278a8ae0007d3a3bf00fff80ec3ed7ae4eb9bfa1772853101549b                                        0.0s
+ => [backend internal] load build context                                                                                                                                            0.6s
+ => => transferring context: 2.93MB                                                                                                                                                  0.6s
+ => [backend stage-1 1/3] FROM docker.io/library/openjdk:17-jdk-slim@sha256:aaa3b3cb27e3e520b8f116863d0580c438ed55ecfa0bc126b41f68c3f62f9774                                         0.0s
+ => [frontend stage-1 1/3] FROM docker.io/library/nginx:alpine@sha256:4ff102c5d78d254a6f0da062b3cf39eaf07f01eec0927fd21e219d0af8bc0591                                               0.0s
+ => [frontend build 1/6] FROM docker.io/library/node:16@sha256:f77a1aef2da8d83e45ec990f45df50f1a286c5fe8bbfb8c6e4246c6389705c0b                                                      0.0s
+ => [frontend internal] load build context                                                                                                                                           0.6s
+ => => transferring context: 1.02MB                                                                                                                                                  0.5s
+ => CACHED [frontend build 2/6] WORKDIR /app                                                                                                                                         0.0s
+ => CACHED [frontend build 3/6] COPY package*.json ./                                                                                                                                0.0s
+ => CACHED [frontend build 4/6] RUN npm install                                                                                                                                      0.0s
+ => CACHED [frontend build 5/6] COPY . .                                                                                                                                             0.0s
+ => CACHED [frontend build 6/6] RUN npm run build                                                                                                                                    0.0s
+ => CACHED [frontend stage-1 2/3] COPY --from=build /app/dist /usr/share/nginx/html                                                                                                  0.0s
+ => CACHED [frontend stage-1 3/3] COPY nginx.conf /etc/nginx/conf.d/default.conf                                                                                                     0.0s
+ => [frontend] exporting to image                                                                                                                                                    0.0s
+ => => exporting layers                                                                                                                                                              0.0s
+ => => writing image sha256:209773af89997700c3730739f76d66663c64ff590c3e413e7b55c50d82fe2dd1                                                                                         0.0s
+ => => naming to docker.io/library/pokemontcg-frontend                                                                                                                               0.0s
+ => CACHED [backend build 2/4] WORKDIR /app                                                                                                                                          0.0s
+ => [backend build 3/4] COPY . .                                                                                                                                                    16.4s
+ => [frontend] resolving provenance for metadata file                                                                                                                                0.0s
+ => [backend build 4/4] RUN mvn clean package -DskipTests                                                                                                                           31.5s
+ => CACHED [backend stage-1 2/3] WORKDIR /app                                                                                                                                        0.0s
+ => [backend stage-1 3/3] COPY --from=build /app/target/pokimages-0.0.1-SNAPSHOT.jar app.jar                                                                                         0.1s
+ => [backend] exporting to image                                                                                                                                                     0.2s
+ => => exporting layers                                                                                                                                                              0.2s
+[+] Running 7/6image sha256:0f763283c227f233ee83fe94ff260c21e7568699cd51370a8a9ea29f6d12a698                                                                                         0.0s
+ ✔ Service frontend                  Built                                                                                                                                           4.1s 
+ ✔ Service backend                   Built                                                                                                                                          52.4s 
+ ✔ Network pokemontcg_default        Created                                                                                                                                         0.0s 
+ ✔ Volume "pokemontcg_mariadb-data"  Created                                                                                                                                         0.0s 
+ ✔ Container pokemontcg-frontend-1   Created                                                                                                                                         0.1s 
+ ✔ Container pokemontcg-db-1         Created                                                                                                                                         0.1s 
+ ✔ Container pokemontcg-backend-1    Created                                                                                                                                         0.1s 
+Attaching to backend-1, db-1, frontend-1
+frontend-1  | /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+frontend-1  | /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+frontend-1  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+db-1        | 2025-03-23 18:41:03+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:11.6.2+maria~ubu2404 started.
+frontend-1  | 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+frontend-1  | 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+frontend-1  | /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+frontend-1  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+frontend-1  | /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+frontend-1  | /docker-entrypoint.sh: Configuration complete; ready for start up
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: using the "epoll" event method
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: nginx/1.27.4
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: built by gcc 14.2.0 (Alpine 14.2.0) 
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: OS: Linux 6.10.14-linuxkit
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker processes
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 29
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 30
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 31
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 32
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 33
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 34
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 35
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 36
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 37
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 38
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 39
+frontend-1  | 2025/03/23 18:41:03 [notice] 1#1: start worker process 40
+db-1        | 2025-03-23 18:41:03+00:00 [Warn] [Entrypoint]: /sys/fs/cgroup///memory.pressure not writable, functionality unavailable to MariaDB
+db-1        | 2025-03-23 18:41:03+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+db-1        | 2025-03-23 18:41:03+00:00 [Note] [Entrypoint]: Entrypoint script for MariaDB Server 1:11.6.2+maria~ubu2404 started.
+db-1        | 2025-03-23 18:41:03+00:00 [Note] [Entrypoint]: Initializing database files
+db-1        | 2025-03-23 18:41:05+00:00 [Note] [Entrypoint]: Database files initialized
+db-1        | 2025-03-23 18:41:05+00:00 [Note] [Entrypoint]: Starting temporary server
+db-1        | 2025-03-23 18:41:05+00:00 [Note] [Entrypoint]: Waiting for server startup
+db-1        | 2025-03-23 18:41:05 0 [Note] Starting MariaDB 11.6.2-MariaDB-ubu2404 source revision d8dad8c3b54cd09fefce7bc3b9749f427eed9709 server_uid 72+4ASMvYxproTQgRqIDplDA1XA= as process 93
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: Compressed tables use zlib 1.3
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: Number of transaction pools: 1
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: Using liburing
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: Initializing buffer pool, total size = 128.000MiB, chunk size = 2.000MiB
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: Completed initialization of buffer pool
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: End of log at LSN=47763
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: Opened 3 undo tablespaces
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: 128 rollback segments in 3 undo tablespaces are active.
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+db-1        | 2025-03-23 18:41:05 0 [Note] InnoDB: log sequence number 47763; transaction id 14
+db-1        | 2025-03-23 18:41:05 0 [Note] Plugin 'FEEDBACK' is disabled.
+db-1        | 2025-03-23 18:41:05 0 [Note] Plugin 'wsrep-provider' is disabled.
+db-1        | 2025-03-23 18:41:05 0 [Note] mariadbd: Event Scheduler: Loaded 0 events
+db-1        | 2025-03-23 18:41:05 0 [Note] mariadbd: ready for connections.
+db-1        | Version: '11.6.2-MariaDB-ubu2404'  socket: '/run/mysqld/mysqld.sock'  port: 0  mariadb.org binary distribution
+db-1        | 2025-03-23 18:41:06+00:00 [Note] [Entrypoint]: Temporary server started.
+db-1        | 2025-03-23 18:41:06+00:00 [Note] [Entrypoint]: Creating database pokemontcg
+db-1        | 2025-03-23 18:41:06+00:00 [Note] [Entrypoint]: Creating user ia
+db-1        | 2025-03-23 18:41:06+00:00 [Note] [Entrypoint]: Giving user ia access to schema pokemontcg
+db-1        | 2025-03-23 18:41:06+00:00 [Note] [Entrypoint]: Securing system users (equivalent to running mysql_secure_installation)
+db-1        | 
+db-1        | 2025-03-23 18:41:06+00:00 [Note] [Entrypoint]: Stopping temporary server
+db-1        | 2025-03-23 18:41:06 0 [Note] mariadbd (initiated by: unknown): Normal shutdown
+db-1        | 2025-03-23 18:41:06 0 [Note] InnoDB: FTS optimize thread exiting.
+db-1        | 2025-03-23 18:41:06 0 [Note] InnoDB: Starting shutdown...
+db-1        | 2025-03-23 18:41:06 0 [Note] InnoDB: Dumping buffer pool(s) to /var/lib/mysql/ib_buffer_pool
+db-1        | 2025-03-23 18:41:06 0 [Note] InnoDB: Buffer pool(s) dump completed at 250323 18:41:06
+db-1        | 2025-03-23 18:41:06 0 [Note] InnoDB: Removed temporary tablespace data file: "./ibtmp1"
+db-1        | 2025-03-23 18:41:06 0 [Note] InnoDB: Shutdown completed; log sequence number 47763; transaction id 15
+db-1        | 2025-03-23 18:41:06 0 [Note] mariadbd: Shutdown complete
+db-1        | 
+db-1        | 2025-03-23 18:41:06+00:00 [Note] [Entrypoint]: Temporary server stopped
+db-1        | 
+db-1        | 2025-03-23 18:41:06+00:00 [Note] [Entrypoint]: MariaDB init process done. Ready for start up.
+db-1        | 
+db-1        | 2025-03-23 18:41:07 0 [Note] Starting MariaDB 11.6.2-MariaDB-ubu2404 source revision d8dad8c3b54cd09fefce7bc3b9749f427eed9709 server_uid 72+4ASMvYxproTQgRqIDplDA1XA= as process 1
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Compressed tables use zlib 1.3
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Number of transaction pools: 1
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Using crc32 + pclmulqdq instructions
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Using liburing
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Initializing buffer pool, total size = 128.000MiB, chunk size = 2.000MiB
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Completed initialization of buffer pool
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: File system buffers for log disabled (block size=512 bytes)
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: End of log at LSN=47763
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Opened 3 undo tablespaces
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: 128 rollback segments in 3 undo tablespaces are active.
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Setting file './ibtmp1' size to 12.000MiB. Physically writing the file full; Please wait ...
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: File './ibtmp1' size is now 12.000MiB.
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: log sequence number 47763; transaction id 14
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Loading buffer pool(s) from /var/lib/mysql/ib_buffer_pool
+db-1        | 2025-03-23 18:41:07 0 [Note] Plugin 'FEEDBACK' is disabled.
+db-1        | 2025-03-23 18:41:07 0 [Note] Plugin 'wsrep-provider' is disabled.
+db-1        | 2025-03-23 18:41:07 0 [Note] InnoDB: Buffer pool(s) load completed at 250323 18:41:07
+db-1        | 2025-03-23 18:41:08 0 [Note] Server socket created on IP: '0.0.0.0'.
+db-1        | 2025-03-23 18:41:08 0 [Note] Server socket created on IP: '::'.
+db-1        | 2025-03-23 18:41:08 0 [Note] mariadbd: Event Scheduler: Loaded 0 events
+db-1        | 2025-03-23 18:41:08 0 [Note] mariadbd: ready for connections.
+db-1        | Version: '11.6.2-MariaDB-ubu2404'  socket: '/run/mysqld/mysqld.sock'  port: 3306  mariadb.org binary distribution
+backend-1   | 
+backend-1   |   .   ____          _            __ _ _
+backend-1   |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+backend-1   | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+backend-1   |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+backend-1   |   '  |____| .__|_| |_|_| |_\__, | / / / /
+backend-1   |  =========|_|==============|___/=/_/_/_/
+backend-1   | 
+backend-1   |  :: Spring Boot ::                (v3.4.3)
+backend-1   | 
+backend-1   | 2025-03-23T18:41:14.881Z  INFO 1 --- [pokimages] [           main] com.pca.pokimages.PokimagesApplication   : Starting PokimagesApplication v0.0.1-SNAPSHOT using Java 17.0.2 with PID 1 (/app/app.jar started by root in /app)
+backend-1   | 2025-03-23T18:41:14.883Z  INFO 1 --- [pokimages] [           main] com.pca.pokimages.PokimagesApplication   : No active profile set, falling back to 1 default profile: "default"
+backend-1   | 2025-03-23T18:41:15.397Z  INFO 1 --- [pokimages] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+backend-1   | 2025-03-23T18:41:15.434Z  INFO 1 --- [pokimages] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 4 JPA repository interfaces.
+backend-1   | 2025-03-23T18:41:15.565Z  INFO 1 --- [pokimages] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=cfb2c45a-45d1-34ae-8f8b-d25740e2ffd7
+backend-1   | 2025-03-23T18:41:15.776Z  INFO 1 --- [pokimages] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8081 (http)
+backend-1   | 2025-03-23T18:41:15.785Z  INFO 1 --- [pokimages] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+backend-1   | 2025-03-23T18:41:15.785Z  INFO 1 --- [pokimages] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.36]
+backend-1   | 2025-03-23T18:41:15.804Z  INFO 1 --- [pokimages] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+backend-1   | 2025-03-23T18:41:15.805Z  INFO 1 --- [pokimages] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 885 ms
+backend-1   | 2025-03-23T18:41:15.910Z  INFO 1 --- [pokimages] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+backend-1   | 2025-03-23T18:41:15.944Z  INFO 1 --- [pokimages] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.8.Final
+backend-1   | 2025-03-23T18:41:15.965Z  INFO 1 --- [pokimages] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+backend-1   | 2025-03-23T18:41:16.017Z  INFO 1 --- [pokimages] [           main] o.h.e.boot.internal.EnversServiceImpl    : Envers integration enabled? : true
+backend-1   | 2025-03-23T18:41:16.130Z  INFO 1 --- [pokimages] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+backend-1   | 2025-03-23T18:41:16.148Z  INFO 1 --- [pokimages] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+backend-1   | 2025-03-23T18:41:16.209Z  INFO 1 --- [pokimages] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.mariadb.jdbc.Connection@38f502fc
+backend-1   | 2025-03-23T18:41:16.210Z  INFO 1 --- [pokimages] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+backend-1   | 2025-03-23T18:41:16.227Z  WARN 1 --- [pokimages] [           main] org.hibernate.orm.deprecation            : HHH90000025: MariaDBDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+backend-1   | 2025-03-23T18:41:16.240Z  INFO 1 --- [pokimages] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+backend-1   |   Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+backend-1   |   Database driver: undefined/unknown
+backend-1   |   Database version: 11.6.2
+backend-1   |   Autocommit mode: undefined/unknown
+backend-1   |   Isolation level: undefined/unknown
+backend-1   |   Minimum pool size: undefined/unknown
+backend-1   |   Maximum pool size: undefined/unknown
+backend-1   | 2025-03-23T18:41:16.773Z  INFO 1 --- [pokimages] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+backend-1   | Hibernate: 
+backend-1   |     alter table if exists card 
+backend-1   |        drop 
+backend-1   |        foreign key if exists fk_card_cardset
+backend-1   | Hibernate: 
+backend-1   |     alter table if exists card_set 
+backend-1   |        drop 
+backend-1   |        foreign key if exists fk_cardset_serie
+backend-1   | Hibernate: 
+backend-1   |     drop table if exists card
+backend-1   | Hibernate: 
+backend-1   |     drop table if exists card_set
+backend-1   | Hibernate: 
+backend-1   |     drop table if exists serie
+backend-1   | Hibernate: 
+backend-1   |     create table card (
+backend-1   |         external_id varchar(255),
+backend-1   |         image_path varchar(255),
+backend-1   |         name varchar(255) not null,
+backend-1   |         cardset_id BINARY(16),
+backend-1   |         id BINARY(16) not null,
+backend-1   |         primary key (id)
+backend-1   |     ) engine=InnoDB
+backend-1   | Hibernate: 
+backend-1   |     create table card_set (
+backend-1   |         version bigint,
+backend-1   |         external_id varchar(255),
+backend-1   |         name varchar(255) not null,
+backend-1   |         release_date varchar(255),
+backend-1   |         id BINARY(16) not null,
+backend-1   |         serie_id BINARY(16),
+backend-1   |         primary key (id)
+backend-1   |     ) engine=InnoDB
+backend-1   | Hibernate: 
+backend-1   |     create table serie (
+backend-1   |         version bigint,
+backend-1   |         external_id varchar(255),
+backend-1   |         name varchar(255),
+backend-1   |         id BINARY(16) not null,
+backend-1   |         primary key (id)
+backend-1   |     ) engine=InnoDB
+backend-1   | Hibernate: 
+backend-1   |     alter table if exists card 
+backend-1   |        add constraint fk_card_cardset 
+backend-1   |        foreign key (cardset_id) 
+backend-1   |        references card_set (id)
+backend-1   | Hibernate: 
+backend-1   |     alter table if exists card_set 
+backend-1   |        add constraint fk_cardset_serie 
+backend-1   |        foreign key (serie_id) 
+backend-1   |        references serie (id)
+backend-1   | 2025-03-23T18:41:16.895Z  INFO 1 --- [pokimages] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+backend-1   | 2025-03-23T18:41:17.101Z  INFO 1 --- [pokimages] [           main] com.pca.pokimages.service.CardService    : Lancement de l'initialisation des données.
+backend-1   | 2025-03-23T18:41:17.101Z  INFO 1 --- [pokimages] [           main] com.pca.pokimages.service.CardService    : Début de l'initialisation des données depuis l'API Pokémon TCG
+backend-1   | Hibernate: 
+backend-1   |     select
+backend-1   |         count(*) 
+backend-1   |     from
+backend-1   |         serie s1_0
+backend-1   | Hibernate: 
+backend-1   |     select
+backend-1   |         s1_0.id,
+backend-1   |         s1_0.external_id,
+backend-1   |         s1_0.name,
+backend-1   |         s1_0.version 
+backend-1   |     from
+backend-1   |         serie s1_0 
+backend-1   |     where
+backend-1   |         s1_0.name=?
+backend-1   | 2025-03-23T18:41:18.999Z  INFO 1 --- [pokimages] [           main] com.pca.pokimages.service.CardService    : Création d'une nouvelle serie: Diamond & Pearl
+backend-1   | Hibernate: 
+backend-1   |     select
+backend-1   |         s1_0.id,
+backend-1   |         s1_0.external_id,
+backend-1   |         s1_0.name,
+backend-1   |         s1_0.version,
+backend-1   |         s2_0.serie_id,
+backend-1   |         s2_0.id,
+backend-1   |         s2_0.external_id,
+backend-1   |         s2_0.name,
+backend-1   |         s2_0.release_date,
+backend-1   |         s2_0.version 
+backend-1   |     from
+backend-1   |         serie s1_0 
+backend-1   |     left join
+backend-1   |         card_set s2_0 
+backend-1   |             on s1_0.id=s2_0.serie_id 
+backend-1   |     where
+backend-1   |         s1_0.id=?
+backend-1   | Hibernate: 
+backend-1   |     select
+backend-1   |         s1_0.id,
+backend-1   |         s1_0.external_id,
+backend-1   |         s1_0.name,
+backend-1   |         s1_0.version 
+backend-1   |     from
+backend-1   |         serie s1_0 
+backend-1   |     where
+backend-1   |         s1_0.id=?
+backend-1   | 2025-03-23T18:41:19.023Z ERROR 1 --- [pokimages] [           main] com.pca.pokimages.service.CardService    : Erreur lors de l'initialisation des données
+backend-1   | 
+backend-1   | org.springframework.orm.ObjectOptimisticLockingFailureException: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect): [com.pca.pokimages.entity.Serie#01JQ24YC4QRJ79DQF9VW5WQ5X1]
+backend-1   |   at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:325) ~[spring-orm-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244) ~[spring-orm-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560) ~[spring-orm-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165) ~[spring-data-jpa-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at jdk.proxy2/jdk.proxy2.$Proxy135.save(Unknown Source) ~[na:na]
+backend-1   |   at com.pca.pokimages.service.CardService.initData(CardService.java:111) ~[!/:0.0.1-SNAPSHOT]
+backend-1   |   at com.pca.pokimages.service.CardService.init(CardService.java:44) ~[!/:0.0.1-SNAPSHOT]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+backend-1   |   at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+backend-1   |   at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMethod.invoke(InitDestroyAnnotationBeanPostProcessor.java:457) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:401) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:219) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:423) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:601) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:346) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1606) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1552) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:785) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:768) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1445) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:346) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1155) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1121) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1056) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at com.pca.pokimages.PokimagesApplication.main(PokimagesApplication.java:13) ~[!/:0.0.1-SNAPSHOT]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+backend-1   |   at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+backend-1   |   at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102) ~[app.jar:0.0.1-SNAPSHOT]
+backend-1   |   at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64) ~[app.jar:0.0.1-SNAPSHOT]
+backend-1   |   at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40) ~[app.jar:0.0.1-SNAPSHOT]
+backend-1   | Caused by: org.hibernate.StaleObjectStateException: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect): [com.pca.pokimages.entity.Serie#01JQ24YC4QRJ79DQF9VW5WQ5X1]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.entityIsDetached(DefaultMergeEventListener.java:426) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.merge(DefaultMergeEventListener.java:214) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.doMerge(DefaultMergeEventListener.java:152) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.onMerge(DefaultMergeEventListener.java:136) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.onMerge(DefaultMergeEventListener.java:89) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.internal.SessionImpl.fireMerge(SessionImpl.java:854) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.internal.SessionImpl.merge(SessionImpl.java:840) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+backend-1   |   at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+backend-1   |   at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:320) ~[spring-orm-6.2.3.jar!/:6.2.3]
+backend-1   |   at jdk.proxy2/jdk.proxy2.$Proxy130.merge(Unknown Source) ~[na:na]
+backend-1   |   at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:639) ~[spring-data-jpa-3.4.3.jar!/:3.4.3]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+backend-1   |   at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+backend-1   |   at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:515) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:284) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:752) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:174) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:69) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   ... 54 common frames omitted
+backend-1   | 
+backend-1   | 2025-03-23T18:41:19.027Z  WARN 1 --- [pokimages] [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'cardController': Unsatisfied dependency expressed through field 'cardService': Error creating bean with name 'cardService': Invocation of init method failed
+backend-1   | 2025-03-23T18:41:19.028Z  INFO 1 --- [pokimages] [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+backend-1   | 2025-03-23T18:41:19.030Z  INFO 1 --- [pokimages] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+backend-1   | 2025-03-23T18:41:19.033Z  INFO 1 --- [pokimages] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+backend-1   | 2025-03-23T18:41:19.034Z  INFO 1 --- [pokimages] [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+backend-1   | 2025-03-23T18:41:19.044Z  INFO 1 --- [pokimages] [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+backend-1   | 
+backend-1   | Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+backend-1   | 2025-03-23T18:41:19.059Z ERROR 1 --- [pokimages] [           main] o.s.boot.SpringApplication               : Application run failed
+backend-1   | 
+backend-1   | org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'cardController': Unsatisfied dependency expressed through field 'cardService': Error creating bean with name 'cardService': Invocation of init method failed
+backend-1   |   at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:788) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:768) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:146) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:509) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1445) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:600) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:346) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1155) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1121) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1056) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.4.3.jar!/:3.4.3]
+backend-1   |   at com.pca.pokimages.PokimagesApplication.main(PokimagesApplication.java:13) ~[!/:0.0.1-SNAPSHOT]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+backend-1   |   at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+backend-1   |   at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102) ~[app.jar:0.0.1-SNAPSHOT]
+backend-1   |   at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64) ~[app.jar:0.0.1-SNAPSHOT]
+backend-1   |   at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40) ~[app.jar:0.0.1-SNAPSHOT]
+backend-1   | Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'cardService': Invocation of init method failed
+backend-1   |   at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:222) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:423) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1804) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:601) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:339) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:346) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:337) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:202) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1606) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1552) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:785) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   ... 29 common frames omitted
+backend-1   | Caused by: org.springframework.orm.ObjectOptimisticLockingFailureException: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect): [com.pca.pokimages.entity.Serie#01JQ24YC4QRJ79DQF9VW5WQ5X1]
+backend-1   |   at org.springframework.orm.jpa.vendor.HibernateJpaDialect.convertHibernateAccessException(HibernateJpaDialect.java:325) ~[spring-orm-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.orm.jpa.vendor.HibernateJpaDialect.translateExceptionIfPossible(HibernateJpaDialect.java:244) ~[spring-orm-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.translateExceptionIfPossible(AbstractEntityManagerFactoryBean.java:560) ~[spring-orm-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.dao.support.ChainedPersistenceExceptionTranslator.translateExceptionIfPossible(ChainedPersistenceExceptionTranslator.java:61) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.dao.support.DataAccessUtils.translateIfNecessary(DataAccessUtils.java:343) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:160) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.data.jpa.repository.support.CrudMethodMetadataPostProcessor$CrudMethodMetadataPopulatingMethodInterceptor.invoke(CrudMethodMetadataPostProcessor.java:165) ~[spring-data-jpa-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:223) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at jdk.proxy2/jdk.proxy2.$Proxy135.save(Unknown Source) ~[na:na]
+backend-1   |   at com.pca.pokimages.service.CardService.initData(CardService.java:111) ~[!/:0.0.1-SNAPSHOT]
+backend-1   |   at com.pca.pokimages.service.CardService.init(CardService.java:44) ~[!/:0.0.1-SNAPSHOT]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+backend-1   |   at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+backend-1   |   at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMethod.invoke(InitDestroyAnnotationBeanPostProcessor.java:457) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:401) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:219) ~[spring-beans-6.2.3.jar!/:6.2.3]
+backend-1   |   ... 40 common frames omitted
+backend-1   | Caused by: org.hibernate.StaleObjectStateException: Row was updated or deleted by another transaction (or unsaved-value mapping was incorrect): [com.pca.pokimages.entity.Serie#01JQ24YC4QRJ79DQF9VW5WQ5X1]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.entityIsDetached(DefaultMergeEventListener.java:426) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.merge(DefaultMergeEventListener.java:214) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.doMerge(DefaultMergeEventListener.java:152) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.onMerge(DefaultMergeEventListener.java:136) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.internal.DefaultMergeEventListener.onMerge(DefaultMergeEventListener.java:89) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.event.service.internal.EventListenerGroupImpl.fireEventOnEachListener(EventListenerGroupImpl.java:127) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.internal.SessionImpl.fireMerge(SessionImpl.java:854) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at org.hibernate.internal.SessionImpl.merge(SessionImpl.java:840) ~[hibernate-core-6.6.8.Final.jar!/:6.6.8.Final]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+backend-1   |   at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+backend-1   |   at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:320) ~[spring-orm-6.2.3.jar!/:6.2.3]
+backend-1   |   at jdk.proxy2/jdk.proxy2.$Proxy130.merge(Unknown Source) ~[na:na]
+backend-1   |   at org.springframework.data.jpa.repository.support.SimpleJpaRepository.save(SimpleJpaRepository.java:639) ~[spring-data-jpa-3.4.3.jar!/:3.4.3]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77) ~[na:na]
+backend-1   |   at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+backend-1   |   at java.base/java.lang.reflect.Method.invoke(Method.java:568) ~[na:na]
+backend-1   |   at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:359) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryMethodInvoker$RepositoryFragmentMethodInvoker.lambda$new$0(RepositoryMethodInvoker.java:277) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryMethodInvoker.doInvoke(RepositoryMethodInvoker.java:170) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryMethodInvoker.invoke(RepositoryMethodInvoker.java:158) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryComposition$RepositoryFragments.invoke(RepositoryComposition.java:515) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryComposition.invoke(RepositoryComposition.java:284) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.RepositoryFactorySupport$ImplementationMethodExecutionInterceptor.invoke(RepositoryFactorySupport.java:752) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.doInvoke(QueryExecutorMethodInterceptor.java:174) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.data.repository.core.support.QueryExecutorMethodInterceptor.invoke(QueryExecutorMethodInterceptor.java:149) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.data.projection.DefaultMethodInvokingMethodInterceptor.invoke(DefaultMethodInvokingMethodInterceptor.java:69) ~[spring-data-commons-3.4.3.jar!/:3.4.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.transaction.interceptor.TransactionAspectSupport.invokeWithinTransaction(TransactionAspectSupport.java:380) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.transaction.interceptor.TransactionInterceptor.invoke(TransactionInterceptor.java:119) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:184) ~[spring-aop-6.2.3.jar!/:6.2.3]
+backend-1   |   at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:138) ~[spring-tx-6.2.3.jar!/:6.2.3]
+backend-1   |   ... 54 common frames omitted
+backend-1   | 
+backend-1 exited with code 1
+

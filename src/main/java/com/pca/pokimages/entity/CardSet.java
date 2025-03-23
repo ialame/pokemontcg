@@ -37,10 +37,13 @@ public class CardSet extends AbstractUlidEntity {
     @OneToMany(mappedBy = "cardSet", fetch = FetchType.LAZY) // Corrigé de @ManyToMany à @OneToMany
     private List<Card> cards = new ArrayList<>();
 
-    @Version // Ajout du champ de version
-    private Integer version = 0; // Initialiser la valeur à 0 ou 1
+    @Version
+    private Long version = 0L; // Initialisation par défaut
 
-//    public CardSet() {
-//        this.version = 0; // Initialiser la valeur à 0 ou 1
-//    }
+    // getters et setters
+
+    public CardSet() {
+        // Initialisation par défaut
+        this.version = 0L;
+    }
 }

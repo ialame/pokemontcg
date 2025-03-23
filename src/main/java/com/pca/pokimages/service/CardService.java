@@ -55,9 +55,9 @@ public class CardService {
                 if (attempts >= maxRetries) {
                     throw ex;
                 }
-                // Attendre avant de réessayer
+                // Attendre avant de réessayer (délai exponentiel)
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep((long) Math.pow(2, attempts) * 100);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                     throw new RuntimeException(e);
@@ -108,6 +108,7 @@ public class CardService {
                     serie.setId(Ulid.fast());
                     serie.setName(seriesName);
                     logger.info("Création d'une nouvelle serie: {}", seriesName);
+                    serieRepository.save(serie); // Sauvegarder la série ici
                 }
 
                 for (SetData setData : setsData) {
@@ -117,10 +118,8 @@ public class CardService {
                     set.setName(setData.name);
                     set.setReleaseDate(setData.releaseDate);
                     set.setSerie(serie);
-                    saveSetWithRetry(set, 3); // Réessayer jusqu'à 3 fois
+                    saveSetWithRetry(set, 5); // Réessayer jusqu'à 5 fois
                 }
-
-                serieRepository.save(serie);
             }
 
             logger.info("Initialisation des données terminée avec succès. Total series : {}, sets : {}",
@@ -130,6 +129,7 @@ public class CardService {
             throw e;
         }
     }
+
 
     public List<Serie> getSeries() {
         return serieRepository.findAll();
