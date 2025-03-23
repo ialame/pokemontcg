@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Serie, Set, Card } from '@/types/card';
 
 const series = ref<Serie[]>([]);
-const selectedSeries = ref<string>('');
+const selectedSeries = ref<string>(''); // Contiendra l'ID, pas le nom
 const sets = ref<Set[]>([]);
 const selectedSet = ref<string>('');
 const cards = ref<Card[]>([]);
@@ -30,16 +30,16 @@ const fetchSeries = async () => {
   }
 };
 
-const fetchSets = async (seriesName: string) => {
-  if (!seriesName) {
+const fetchSets = async (seriesId: string) => {
+  if (!seriesId) {
     sets.value = [];
     cards.value = [];
     return;
   }
   loading.value = true;
   try {
-    const response = await axios.get<Set[]>(`http://localhost:8081/api/series/${seriesName}/sets`);
-    console.log('Réponse brute de /api/series/{seriesName}/sets :', response.data);
+    const response = await axios.get<Set[]>(`http://localhost:8081/api/series/${seriesId}/sets`);
+    console.log('Réponse brute de /api/series/{seriesId}/sets :', response.data);
     console.log('Est-ce un tableau ?', Array.isArray(response.data));
     if (Array.isArray(response.data)) {
       sets.value = response.data;
@@ -81,9 +81,9 @@ const fetchCards = async (setId: string) => {
 
 onMounted(fetchSeries);
 
-watch(selectedSeries, (newSeries) => {
-  console.log('Série sélectionnée :', newSeries);
-  fetchSets(newSeries);
+watch(selectedSeries, (newSeriesId) => {
+  console.log('Série sélectionnée (ID) :', newSeriesId);
+  fetchSets(newSeriesId);
   selectedSet.value = '';
   cards.value = [];
 });
@@ -100,7 +100,7 @@ watch(selectedSet, (newSet) => {
       <label for="series">Choisir une série :</label>
       <select id="series" v-model="selectedSeries">
         <option value="">-- Sélectionner une série --</option>
-        <option v-for="serie in series" :key="serie.id" :value="serie.name">{{ serie.name }}</option>
+        <option v-for="serie in series" :key="serie.id" :value="serie.id">{{ serie.name }}</option>
       </select>
     </div>
 

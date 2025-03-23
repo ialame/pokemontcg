@@ -14,6 +14,10 @@ import org.hibernate.envers.Audited;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Card extends AbstractUlidEntity {
+
+    @Column(name = "external_id")
+    private String externalId; // ID de l’API Pokémon TCG
+
     @Column(nullable = false)
     private String name;
 
@@ -27,4 +31,10 @@ public class Card extends AbstractUlidEntity {
     public String getImagePath() {
         return imagePath != null ? "http://localhost:8081/api/images/" + cardSet.getSerie().getName() + "/" + cardSet.getName() + "/" + name + ".png" : null;
     }
+
+//    @Version // Ajoutez cette annotation
+//    private Integer version; // Utilisez Integer, Long, ou similaire
+//    public Card() {
+//        this.version = 0; // Initialiser la valeur à 0 ou 1
+//    }
 }

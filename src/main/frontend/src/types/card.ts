@@ -1,12 +1,12 @@
 export interface Serie {
-    id: number;
+    id: string;
     name: string;
 }
 
 export interface Set {
     id: string;
     name: string;
-    releaseDate?: string;
+    releaseDate: string;
 }
 
 export interface Card {

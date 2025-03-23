@@ -10,11 +10,11 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:mariadb://db:3306/pokemontcg
       - SPRING_DATASOURCE_USERNAME=ia
       - SPRING_DATASOURCE_PASSWORD=foufafou
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create  # Changé de "update" à "create"
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
       - SPRING_JPA_SHOW_SQL=true
       - SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED=false
     volumes:
-      - images-data:/app/images
+      - ./images:/app/images
 
   frontend:
     build: ./src/main/frontend
