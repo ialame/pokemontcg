@@ -26,8 +26,8 @@ public class Serie extends AbstractUlidEntity {
     @JsonManagedReference // Évite les références circulaires
     private List<CardSet> sets = new ArrayList<>();
 
-//    @Version // Ajoutez cette annotation
-//    private Integer version; // Utilisez Integer, Long, ou similaire
+    @Version // Ajoutez cette annotation
+    private Integer version; // Utilisez Integer, Long, ou similaire
 //    public Serie() {
 //        this.version = 0; // Initialiser la valeur à 0 ou 1
 //    }

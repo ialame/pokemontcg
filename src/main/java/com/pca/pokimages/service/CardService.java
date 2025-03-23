@@ -44,22 +44,43 @@ public class CardService {
         initData();
     }
 
+    private void saveSetWithRetry(CardSet set, int maxRetries) {
+        int attempts = 0;
+        while (attempts < maxRetries) {
+            try {
+                cardSetRepository.save(set);
+                return;
+            } catch (ObjectOptimisticLockingFailureException ex) {
+                attempts++;
+                if (attempts >= maxRetries) {
+                    throw ex;
+                }
+                // Attendre avant de réessayer
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
+                }
+                // Recharger l'entité et réessayer
+                set = cardSetRepository.findById(set.getId()).orElse(set);
+            }
+        }
+    }
+
     private void initData() {
         try {
             logger.info("Début de l'initialisation des données depuis l'API Pokémon TCG");
 
-            // Vérifier si la base est déjà remplie
             if (serieRepository.count() > 0) {
                 logger.info("La base contient déjà des données ({} séries), initialisation ignorée", serieRepository.count());
                 return;
             }
 
-            // Configurer les headers avec la clé API
             HttpHeaders headers = new HttpHeaders();
             headers.set("X-Api-Key", apiKey);
             HttpEntity<String> entity = new HttpEntity<>(headers);
 
-            // Récupérer les sets
             String setsUrl = POKEMON_TCG_API + "/sets";
             var setsResponse = restTemplate.exchange(setsUrl, HttpMethod.GET, entity, SetsResponse.class);
             if (setsResponse.getBody() == null || setsResponse.getBody().data == null) {
@@ -67,61 +88,38 @@ public class CardService {
                 return;
             }
 
-            // Grouper les sets par série et créer les entités en mémoire
             Map<String, List<SetData>> setsBySeries = setsResponse.getBody().data.stream()
                     .collect(Collectors.groupingBy(set -> set.series));
 
-            // Utiliser une Collection pour enregistrer une liste de series
             List<Serie> seriesToSave = new ArrayList<>();
 
-            //Parcourir les series dans une boucle
             for (Map.Entry<String, List<SetData>> entry : setsBySeries.entrySet()) {
                 String seriesName = entry.getKey();
                 List<SetData> setsData = entry.getValue();
 
-                // Vérifier si la serie a déjà été enregistrée
                 Optional<Serie> existingSerie = serieRepository.findByName(seriesName);
 
                 Serie serie;
-                // Si la serie existe alors mettre à jour
                 if (existingSerie.isPresent()) {
                     serie = existingSerie.get();
                     logger.info("Mise à jour de la serie existante: {}", seriesName);
                 } else {
-                    // Si non, créer une nouvelle serie
                     serie = new Serie();
                     serie.setId(Ulid.fast());
                     serie.setName(seriesName);
                     logger.info("Création d'une nouvelle serie: {}", seriesName);
                 }
 
-                // Boucler sur les sets et les enregistrer un par un pour minimiser le problème de concurrence
                 for (SetData setData : setsData) {
                     CardSet set = new CardSet();
                     set.setId(Ulid.fast());
                     set.setExternalId(setData.id);
                     set.setName(setData.name);
                     set.setReleaseDate(setData.releaseDate);
-                    set.setSerie(serie); // Associer la série au set
-                    try {
-                        cardSetRepository.save(set);
-                    } catch (ObjectOptimisticLockingFailureException ex) {
-                        logger.error("Verrouillage optimiste lors de l'enregistrement du CardSet. ID: {}", set.getId());
-                        logger.error("Rechargement et nouvelle tentative...");
-                        CardSet reloadedSet = cardSetRepository.findById(set.getId()).orElse(null);
-                        if (reloadedSet != null) {
-                            set.setExternalId(setData.id);
-                            set.setName(setData.name);
-                            set.setReleaseDate(setData.releaseDate);
-                            set.setSerie(serie);
-                            cardSetRepository.save(set);
-                        } else {
-                            logger.error("Impossible de recharger CardSet avec ID: {}", set.getId());
-                        }
-                    }
+                    set.setSerie(serie);
+                    saveSetWithRetry(set, 3); // Réessayer jusqu'à 3 fois
                 }
 
-                // Enregistrer après la mise à jour pour que l'enregistrement par lot puisse se produire
                 serieRepository.save(serie);
             }
 
@@ -129,7 +127,7 @@ public class CardService {
                     serieRepository.count(), cardSetRepository.count());
         } catch (Exception e) {
             logger.error("Erreur lors de l'initialisation des données", e);
-            throw e; // Relancer pour rollback de la transaction si erreur
+            throw e;
         }
     }
 
